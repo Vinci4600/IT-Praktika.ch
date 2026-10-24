@@ -1,0 +1,4 @@
+ALTER TABLE companies
+  ADD COLUMN contact_person VARCHAR(200) NULL,
+  ADD COLUMN initiative_listed BOOLEAN NOT NULL DEFAULT FALSE,
+  ADD COLUMN internship_url VARCHAR(2048) NULL;

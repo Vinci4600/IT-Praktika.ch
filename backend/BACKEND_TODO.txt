@@ -1,0 +1,93 @@
+BACKEND-TODO - IT-Praktika
+Stand: 20.10.2026
+
+Zweck
+Diese Datei dokumentiert den Umsetzungsstand fuer das erste Release und die
+noch offenen Produkt- und Betriebsentscheidungen.
+
+Prioritaet 1 - Backend-Grundlage und Administration
+[x] Java-21-/Spring-Boot-Backend und MySQL-8.4-Datenbank einrichten.
+[x] API, einheitliche Fehlerbehandlung, Healthcheck und Eingabevalidierung
+    bereitstellen.
+[x] Geschaeftslogik fuer Firmen und Stellen in Services kapseln.
+[x] Oeffentliche Firmen- und Stellenendpunkte sowie Admin-CRUD fuer Firmen und
+    Stellen bereitstellen.
+[x] Admin-Dashboard, Stellen- und Firmenverwaltung mit Backend-Daten verbinden.
+[x] Firmen- und Stellendaten aus der Datenbank statt aus Demo-/localStorage-
+    Daten laden. Die UZH-Firmenliste wird als Snapshot für Initiativbewerbungen
+    importiert; neue Installationen enthalten keine Demo-Stellen.
+[x] Startoption, Ansprechperson und Bewerbungslink pro Stelle speichern und
+    ausliefern.
+[x] Firmen-Partnerstatus und validierte Logo-URL speichern. Datei-Uploads sind
+    nicht umgesetzt; ein Upload benoetigt einen festgelegten und abgesicherten
+    Speicherdienst.
+[x] API-Vertrag, Statuscodes und Fehlerformat in README und Merkblatt
+    dokumentieren.
+[x] Controller-, Validierungs-, Service- und Autorisierungstests ergaenzen.
+[ ] Die drei Testcontainers-Integrationstests gegen eine erreichbare Docker-
+    oder MySQL-Testumgebung ausfuehren. In der aktuellen Umgebung ist kein
+    Docker-Daemon erreichbar; die Tests werden daher uebersprungen und die
+    Flyway-Migrationen sind hier nicht gegen MySQL verifiziert.
+
+Prioritaet 2 - Schueler- und Admin-Kontosicherheit
+[x] Registrierung fuer Schuelerkonten und Login mit BCrypt-Passworthashes
+    implementieren. Die oeffentliche Registrierung kann keine Admin-Rolle
+    setzen.
+[x] Admin-Bootstrap als einmalige, ueber Umgebungsvariablen steuerbare
+    Einrichtung bereitstellen.
+[x] Rollen serverseitig pruefen; die aktuelle Rolle wird aus der Datenbank
+    geladen. Admin-Schreibzugriffe sind nicht nur durch das Frontend geschuetzt.
+[x] JWT-Ablauf, Abmeldung mit Token-Widerruf und Kontoloeschung implementieren.
+    Die Kontoloeschung verlangt das Passwort, entfernt Merkliste-Eintraege
+    kaskadierend und schuetzt das letzte Admin-Konto.
+[x] Passwort-Reset mit gehashtem Einmal-Token, Ablaufzeit und Rate-Limit
+    implementieren.
+[x] Rate-Limits fuer Login, Registrierung und Passwort-Reset sowie
+    regelmaessige Bereinigung abgelaufener Sicherheitseintraege bereitstellen.
+[ ] SMTP-Zugangsdaten in der Zielumgebung einrichten und den echten
+    Passwort-Reset-Mailversand vor dem Release testen.
+
+Prioritaet 3 - persoenliche Merkliste
+[x] GET, POST, PUT und DELETE fuer die Merkliste bereitstellen und an die
+    angemeldete Schueler-ID binden.
+[x] Merkliste in MySQL speichern und im Frontend aus der API laden.
+[x] Nur veroeffentlichte Stellen in GET-Antworten anzeigen. Nicht veroeffentlichte
+    Eintraege bleiben gespeichert und koennen nach erneuter Veroeffentlichung
+    wieder erscheinen; geloeschte Stellen loeschen Eintraege per FK-Cascade.
+[x] Merkliste-Endpunkte, Rollen, Statuscodes und Diagnosehinweise im Merkblatt
+    erklaeren.
+
+Abgesprochener Umfang
+- Firmen- und Schulkontaktformulare sowie Bewerbungen bleiben beim
+  E-Mail-/mailto-Ablauf; es werden keine zentralen Anfragen oder Bewerbungen
+  gespeichert.
+- Der KI-Bewerbungshelfer ist auf spaeter verschoben.
+- Passwort-Reset wird fuer SMTP vorbereitet; der SMTP-Server muss vor dem
+  produktiven Einsatz konfiguriert und getestet werden.
+- Eine Kontoloeschung loescht Konto und Merkliste. Aufbewahrungsfristen sind
+  noch nicht festgelegt.
+
+Noch offene Release-Voraussetzungen und Produktentscheidungen
+[ ] Aufbewahrungs- und Loeschfristen sowie Datenschutzinformationen mit den
+    tatsaechlichen Datenablaeufen abstimmen.
+[ ] SMTP-Zugangsdaten und Absender fuer die Zielumgebung bereitstellen und
+    den Versand pruefen.
+[ ] Produktionsbetrieb festlegen und pruefen: HTTPS/Reverse-Proxy,
+    vertrauenswuerdige Client-IP fuer Rate-Limits, CORS, Secrets,
+    Datenbank-Backups/Wiederherstellung und Monitoring.
+[ ] Integrationstests mit MySQL ausfuehren; Testcontainers ueberspringt sie
+    ohne erreichbaren Docker-Daemon.
+[ ] Firmen- und Stellendaten fuer den Start einpflegen und fachlich pruefen.
+[ ] UZH-Firmenlisten-Snapshot aktualisieren, falls die Quelle geändert wird;
+    die Flyway-Migration synchronisiert keine späteren Änderungen automatisch.
+[ ] Entscheiden, ob Firmen- und Schulkontaktanfragen kuenftig zentral
+    gespeichert und verwaltet werden sollen.
+[ ] Entscheiden, ob Firmenlogos als Datei-Upload statt als URL verwaltet
+    werden sollen und welcher verwaltete Speicher dafuer eingesetzt wird.
+
+Spaeter / nicht Teil des ersten Releases
+- Bewerbungshelfer-Checklisten dauerhaft speichern.
+- Bewerbungen ueber die Plattform entgegennehmen und verwalten.
+- Kontaktformulare zentral im Adminbereich speichern.
+- Firmenkonten ergaenzen; im aktuellen Konzept verwaltet der Admin die
+  Firmenprofile und Stellen.
